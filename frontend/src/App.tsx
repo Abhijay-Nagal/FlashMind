@@ -17,7 +17,7 @@ function App() {
   return (
     <main>
       <h1>FlashMind</h1>
-      <p>Learn. Swipe. Repeat.</p>
+      <p>Learn. Swipe. Repeat.yay</p>
       <p>Backend: {backendStatus}</p>
     </main>
   );
