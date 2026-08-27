@@ -5,9 +5,11 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 interface Props {
   card: Flashcard;
   onAnswerSelected?: (isCorrect: boolean) => void;
+  currentIndex?: number;
+  totalCards?: number;
 }
 
-export function FlashcardBack({ card, onAnswerSelected }: Props) {
+export function FlashcardBack({ card, onAnswerSelected, currentIndex = 0, totalCards = 1 }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleSelect = (id: string) => {
@@ -20,6 +22,17 @@ export function FlashcardBack({ card, onAnswerSelected }: Props) {
 
   return (
     <div className="flashcard-face flashcard-back">
+      <div className="card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span className="card-category">{card.category}</span>
+          <span className="card-topic">{card.topic}</span>
+        </div>
+        {totalCards > 1 && (
+          <span className="card-page" style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text)', opacity: 0.8 }}>
+            {currentIndex + 1} / {totalCards}
+          </span>
+        )}
+      </div>
       <div className="card-body mcq-body">
         <h3 className="mcq-question">{card.question}</h3>
         <div className="mcq-options">

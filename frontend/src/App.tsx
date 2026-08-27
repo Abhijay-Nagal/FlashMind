@@ -62,6 +62,8 @@ function App() {
         <Flashcard
           key={currentCard.id}
           card={currentCard}
+          currentIndex={hIndex}
+          totalCards={currentChain.length}
           onSwipeLeft={handleSwipeLeft}
           onSwipeRight={handleSwipeRight}
           onSwipeUp={handleSwipeUp}

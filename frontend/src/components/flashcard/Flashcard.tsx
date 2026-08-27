@@ -5,6 +5,8 @@ import { FlashcardBack } from './FlashcardBack';
 
 interface Props {
   card: FlashcardType;
+  currentIndex: number;
+  totalCards: number;
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
   onSwipeUp: () => void;
@@ -19,6 +21,7 @@ interface Props {
 
 export function Flashcard({ 
   card, 
+  currentIndex, totalCards,
   onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown,
   canSwipeLeft, canSwipeRight, canSwipeUp, canSwipeDown,
   isFlipped, setIsFlipped 
@@ -166,8 +169,8 @@ export function Flashcard({
         onPointerCancel={handlePointerUp}
         style={{ touchAction: 'none' }}
       >
-        <FlashcardFront card={card} />
-        <FlashcardBack card={card} />
+        <FlashcardFront card={card} currentIndex={currentIndex} totalCards={totalCards} />
+        <FlashcardBack card={card} currentIndex={currentIndex} totalCards={totalCards} />
       </div>
     </div>
   );
