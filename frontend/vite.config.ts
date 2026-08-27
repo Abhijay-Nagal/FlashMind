@@ -16,6 +16,14 @@ export default defineConfig({
         background_color: '#000000',
         display: 'standalone',
         start_url: '/',
+        icons: [
+          {
+            src: '/favicon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable'
+          }
+        ]
       },
     }),
   ],

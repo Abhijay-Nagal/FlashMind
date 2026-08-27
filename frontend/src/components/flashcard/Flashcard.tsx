@@ -88,7 +88,7 @@ export function Flashcard({
       return;
     }
 
-    const SWIPE_THRESHOLD = 80;
+    const SWIPE_THRESHOLD = 50;
 
     // Is it a swipe left?
     if (deltaX < -SWIPE_THRESHOLD && absX > absY && canSwipeLeft) {
