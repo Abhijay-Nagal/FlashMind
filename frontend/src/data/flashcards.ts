@@ -166,9 +166,21 @@ export const flashcards: Flashcard[] = [
   }
 ];
 
-// Helper to get a random unrelated card
+// Helper to get a random unrelated card (Legacy logic, can be removed but kept for compatibility)
 export function getRandomUnrelatedCard(currentCardId: string): Flashcard {
   const availableCards = flashcards.filter(c => c.id !== currentCardId);
   const randomIndex = Math.floor(Math.random() * availableCards.length);
   return availableCards[randomIndex];
 }
+
+// 2D Grid structure for the feed
+// Vertical lines = unrelated topics
+// Horizontal lines = related cards within a topic
+export const flashcardChains = [
+  ['newton-1', 'newton-2', 'newton-3', 'momentum', 'impulse'], // Chain 1: Physics
+  ['photosynthesis'], // Chain 2: Plant Biology
+  ['binary-search'], // Chain 3: Algorithms
+  ['water-cycle'], // Chain 4: Geology
+  ['electromagnetic-induction'], // Chain 5: Electromagnetism
+  ['ww2'] // Chain 6: History
+];

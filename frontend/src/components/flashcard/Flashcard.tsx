@@ -6,12 +6,23 @@ import { FlashcardBack } from './FlashcardBack';
 interface Props {
   card: FlashcardType;
   onSwipeLeft: () => void;
+  onSwipeRight: () => void;
   onSwipeUp: () => void;
+  onSwipeDown: () => void;
+  canSwipeLeft: boolean;
+  canSwipeRight: boolean;
+  canSwipeUp: boolean;
+  canSwipeDown: boolean;
   isFlipped: boolean;
   setIsFlipped: (flipped: boolean) => void;
 }
 
-export function Flashcard({ card, onSwipeLeft, onSwipeUp, isFlipped, setIsFlipped }: Props) {
+export function Flashcard({ 
+  card, 
+  onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown,
+  canSwipeLeft, canSwipeRight, canSwipeUp, canSwipeDown,
+  isFlipped, setIsFlipped 
+}: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -19,7 +30,7 @@ export function Flashcard({ card, onSwipeLeft, onSwipeUp, isFlipped, setIsFlippe
   const [deltaX, setDeltaX] = useState(0);
   const [deltaY, setDeltaY] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [exitDirection, setExitDirection] = useState<'left' | 'up' | null>(null);
+  const [exitDirection, setExitDirection] = useState<'left' | 'right' | 'up' | 'down' | null>(null);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     if (isAnimating || exitDirection) return;
@@ -42,9 +53,20 @@ export function Flashcard({ card, onSwipeLeft, onSwipeUp, isFlipped, setIsFlippe
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
     
-    // Add slight resistance to opposite directions to make intent clear
-    setDeltaX(dx > 0 ? dx * 0.2 : dx);
-    setDeltaY(dy > 0 ? dy * 0.2 : dy);
+    // Calculate resistance based on whether swipe is allowed
+    let appliedDx = dx;
+    let appliedDy = dy;
+    
+    if (dx < 0 && !canSwipeLeft) appliedDx = dx * 0.15; // Hard resistance if can't swipe
+    else if (dx > 0 && !canSwipeRight) appliedDx = dx * 0.15;
+    else if (dx > 0) appliedDx = dx * 0.5; // Slight resistance in opposite direction
+
+    if (dy < 0 && !canSwipeUp) appliedDy = dy * 0.15;
+    else if (dy > 0 && !canSwipeDown) appliedDy = dy * 0.15;
+    else if (dy > 0) appliedDy = dy * 0.5;
+    
+    setDeltaX(appliedDx);
+    setDeltaY(appliedDy);
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
@@ -66,27 +88,41 @@ export function Flashcard({ card, onSwipeLeft, onSwipeUp, isFlipped, setIsFlippe
       return;
     }
 
-    // Is it a swipe left? (prioritize the stronger axis)
-    if (deltaX < -100 && absX > absY) {
+    const SWIPE_THRESHOLD = 80;
+
+    // Is it a swipe left?
+    if (deltaX < -SWIPE_THRESHOLD && absX > absY && canSwipeLeft) {
       setExitDirection('left');
       setIsAnimating(true);
-      setTimeout(() => {
-        onSwipeLeft();
-      }, 300); // Wait for exit animation
+      setTimeout(() => onSwipeLeft(), 300);
+      return;
+    }
+
+    // Is it a swipe right?
+    if (deltaX > SWIPE_THRESHOLD && absX > absY && canSwipeRight) {
+      setExitDirection('right');
+      setIsAnimating(true);
+      setTimeout(() => onSwipeRight(), 300);
       return;
     }
 
     // Is it a swipe up?
-    if (deltaY < -100 && absY > absX) {
+    if (deltaY < -SWIPE_THRESHOLD && absY > absX && canSwipeUp) {
       setExitDirection('up');
       setIsAnimating(true);
-      setTimeout(() => {
-        onSwipeUp();
-      }, 300); // Wait for exit animation
+      setTimeout(() => onSwipeUp(), 300);
+      return;
+    }
+    
+    // Is it a swipe down?
+    if (deltaY > SWIPE_THRESHOLD && absY > absX && canSwipeDown) {
+      setExitDirection('down');
+      setIsAnimating(true);
+      setTimeout(() => onSwipeDown(), 300);
       return;
     }
 
-    // Not a valid swipe, return to center
+    // Not a valid swipe (or hit an endpoint), return to center
     setIsAnimating(true);
     setDeltaX(0);
     setDeltaY(0);
@@ -100,8 +136,14 @@ export function Flashcard({ card, onSwipeLeft, onSwipeUp, isFlipped, setIsFlippe
   if (exitDirection === 'left') {
     transform = `translateX(-150vw) rotate(-15deg)`;
     opacity = 0;
+  } else if (exitDirection === 'right') {
+    transform = `translateX(150vw) rotate(15deg)`;
+    opacity = 0;
   } else if (exitDirection === 'up') {
     transform = `translateY(-150vh) rotate(10deg)`;
+    opacity = 0;
+  } else if (exitDirection === 'down') {
+    transform = `translateY(150vh) rotate(-10deg)`;
     opacity = 0;
   } else if (isDragging || isAnimating) {
     const rotate = deltaX * 0.05; // slight rotation while dragging
