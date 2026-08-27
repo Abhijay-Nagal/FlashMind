@@ -109,3 +109,235 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* --- FlashMind MVP Styles --- */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--bg);
+  position: relative;
+  width: 100%;
+}
+
+.feed-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 70px; /* Space for bottom nav */
+}
+
+/* Flashcard Drag Container */
+.flashcard-drag-container {
+  width: 90%;
+  max-width: 400px;
+  height: 60vh;
+  min-height: 400px;
+  max-height: 600px;
+  position: absolute;
+  z-index: 10;
+}
+
+/* 3D Flip Container */
+.flashcard-flip-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+  cursor: grab;
+}
+
+.flashcard-flip-container:active {
+  cursor: grabbing;
+}
+
+.flashcard-flip-container.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Front & Back Faces */
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.flashcard-front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+/* Card Content Styling */
+.card-header {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-category {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.card-topic {
+  font-size: 14px;
+  color: var(--text);
+  margin-top: 4px;
+  text-align: left;
+}
+
+.card-body {
+  padding: 24px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.card-title {
+  font-size: 28px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card-content {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-h);
+}
+
+.card-footer {
+  padding: 16px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+.hint-text {
+  font-size: 14px;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+/* MCQ Styles */
+.mcq-body {
+  justify-content: flex-start;
+}
+
+.mcq-question {
+  font-size: 20px;
+  margin-bottom: 24px;
+  color: var(--text-h);
+}
+
+.mcq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mcq-option-btn {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.mcq-option-btn:hover:not(.disabled) {
+  background: var(--social-bg);
+}
+
+.mcq-option-btn.correct {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.mcq-option-btn.incorrect {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.mcq-option-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-correct {
+  color: #22c55e;
+}
+
+.icon-incorrect {
+  color: #ef4444;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-h);
+  cursor: pointer;
+  padding: 8px 24px;
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.nav-btn:hover {
+  color: var(--accent);
+}
+
+.nav-label {
+  font-size: 12px;
+  font-weight: 500;
+}
