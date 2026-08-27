@@ -57,13 +57,11 @@ export function Flashcard({
     let appliedDx = dx;
     let appliedDy = dy;
     
-    if (dx < 0 && !canSwipeLeft) appliedDx = dx * 0.15; // Hard resistance if can't swipe
+    if (dx < 0 && !canSwipeLeft) appliedDx = dx * 0.15;
     else if (dx > 0 && !canSwipeRight) appliedDx = dx * 0.15;
-    else if (dx > 0) appliedDx = dx * 0.5; // Slight resistance in opposite direction
 
     if (dy < 0 && !canSwipeUp) appliedDy = dy * 0.15;
     else if (dy > 0 && !canSwipeDown) appliedDy = dy * 0.15;
-    else if (dy > 0) appliedDy = dy * 0.5;
     
     setDeltaX(appliedDx);
     setDeltaY(appliedDy);
