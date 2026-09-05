@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 interface ParticlesProps {
   particleCount?: number;
@@ -10,8 +10,6 @@ interface ParticlesProps {
 export function AnimatedBackground({
   particleCount = 60,
   speed = 0.5,
-  particleColor = "#22d3ee", // Teal bluish color
-  lineColor = "#22d3ee",
 }: ParticlesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
