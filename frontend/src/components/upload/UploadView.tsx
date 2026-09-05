@@ -4,6 +4,18 @@ import { Upload, FileText, Zap, BookOpen, BrainCircuit, Loader2 } from 'lucide-r
 import { generateFlashcards, generateSummary, generateQA } from '../../services/api';
 import type { Flashcard } from '../../types/flashcard';
 
+interface QAOption {
+  id: string;
+  text: string;
+}
+
+interface QAQuestion {
+  id?: string;
+  question: string;
+  options: QAOption[];
+  correctAnswerId: string;
+}
+
 interface Props {
   onFlashcardsGenerated: (cards: Flashcard[]) => void;
 }
@@ -12,7 +24,7 @@ export function UploadView({ onFlashcardsGenerated }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<string | null>(null); // 'flashcards' | 'summary' | 'qa'
   const [summary, setSummary] = useState<string | null>(null);
-  const [qaList, setQaList] = useState<any[] | null>(null);
+  const [qaList, setQaList] = useState<QAQuestion[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,8 +45,8 @@ export function UploadView({ onFlashcardsGenerated }: Props) {
     try {
       const data = await generateFlashcards(file);
       onFlashcardsGenerated(data.flashcards);
-    } catch (err: any) {
-      setError(err.message || 'Failed to generate flashcards');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to generate flashcards');
     } finally {
       setLoading(null);
     }
@@ -48,8 +60,8 @@ export function UploadView({ onFlashcardsGenerated }: Props) {
       const data = await generateSummary(file);
       setSummary(data.summary);
       setQaList(null);
-    } catch (err: any) {
-      setError(err.message || 'Failed to generate summary');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to generate summary');
     } finally {
       setLoading(null);
     }
@@ -63,8 +75,8 @@ export function UploadView({ onFlashcardsGenerated }: Props) {
       const data = await generateQA(file);
       setQaList(data.quiz);
       setSummary(null);
-    } catch (err: any) {
-      setError(err.message || 'Failed to generate Q/A');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to generate Q/A');
     } finally {
       setLoading(null);
     }
@@ -164,7 +176,7 @@ export function UploadView({ onFlashcardsGenerated }: Props) {
           >
             <h3 className="upload-result-title text-success"><BrainCircuit size={24} /> Q/A Quiz</h3>
             <div className="qa-list">
-              {qaList.map((q: any, i: number) => (
+              {qaList.map((q: QAQuestion, i: number) => (
                 <motion.div 
                   key={q.id || i} 
                   initial={{ opacity: 0, x: -20 }}
@@ -174,7 +186,7 @@ export function UploadView({ onFlashcardsGenerated }: Props) {
                 >
                   <p className="qa-question">{i + 1}. {q.question}</p>
                   <div className="qa-options">
-                    {q.options.map((opt: any) => (
+                    {q.options.map((opt: QAOption) => (
                       <div key={opt.id} className={`qa-option ${opt.id === q.correctAnswerId ? 'correct' : ''}`}>
                         <span className="qa-option-label">{opt.id.toUpperCase()}</span> {opt.text}
                       </div>
