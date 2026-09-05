@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Logo } from './Logo';
 
 interface Props {
@@ -6,28 +7,22 @@ interface Props {
 }
 
 export function SplashScreen({ onComplete }: Props) {
-  const [isFadingOut, setIsFadingOut] = useState(false);
-
   useEffect(() => {
-    // Start fade out after the sequence finishes (about 3 seconds)
-    const fadeOutTimer = setTimeout(() => {
-      setIsFadingOut(true);
-    }, 3200);
-
-    // Complete splash screen and unmount
     const completeTimer = setTimeout(() => {
       onComplete();
-    }, 3700);
+    }, 3500); // reduced slightly to account for smooth framer fade
 
-    return () => {
-      clearTimeout(fadeOutTimer);
-      clearTimeout(completeTimer);
-    };
+    return () => clearTimeout(completeTimer);
   }, [onComplete]);
 
   return (
-    <div className={`splash-screen ${isFadingOut ? 'fade-out' : ''}`}>
+    <motion.div 
+      className="splash-screen"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+    >
       <Logo animated={true} />
-    </div>
+    </motion.div>
   );
 }

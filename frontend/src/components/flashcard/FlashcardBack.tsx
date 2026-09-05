@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import type { Flashcard } from '../../types/flashcard';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
@@ -48,10 +49,11 @@ export function FlashcardBack({ card, onAnswerSelected, currentIndex = 0, totalC
             if (selectedId && !isSelected && !isCorrect) btnClass += ' disabled';
 
             return (
-              <button
+              <motion.button
                 key={option.id}
                 className={btnClass}
-                onClick={(e) => {
+                whileTap={{ scale: 0.98 }}
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation(); // Prevent flipping the card when answering
                   handleSelect(option.id);
                 }}
@@ -60,7 +62,7 @@ export function FlashcardBack({ card, onAnswerSelected, currentIndex = 0, totalC
                 <span className="option-text">{option.text}</span>
                 {showCorrect && <CheckCircle2 className="icon-correct" size={20} />}
                 {showIncorrect && <XCircle className="icon-incorrect" size={20} />}
-              </button>
+              </motion.button>
             );
           })}
         </div>

@@ -12,16 +12,22 @@ export default defineConfig({
         name: 'FlashMind',
         short_name: 'FlashMind',
         description: 'Learn. Swipe. Repeat.',
-        theme_color: '#000000',
-        background_color: '#000000',
+        theme_color: '#aa3bff',
+        background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
         icons: [
           {
-            src: '/favicon.svg',
+            src: '/pwa-icon-192.svg',
             sizes: 'any',
             type: 'image/svg+xml',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: '/pwa-icon-maskable.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'maskable'
           }
         ]
       },

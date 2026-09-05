@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Rounded-square container: research-optimal shape (Liu, Cao & Proctor 2021) -->
+  <rect width="192" height="192" rx="38" fill="#aa3bff" />
+  <!-- Lightning bolt: high contrast white against purple for clear figure/ground -->
+  <path d="M104 28L40 104h56l-12 60 72-84H100l12-52z" fill="#fff" />
+</svg>

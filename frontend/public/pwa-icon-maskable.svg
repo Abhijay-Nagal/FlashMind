@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Full bleed background for maskable safe zone -->
+  <rect width="512" height="512" fill="#aa3bff" />
+  <!-- Lightning bolt centered within safe zone (inner 80% = 409px, offset ~51px) -->
+  <path d="M272 96L152 272h96l-24 144 128-192H272l24-128z" fill="#fff" />
+</svg>
