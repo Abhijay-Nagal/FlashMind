@@ -120,7 +120,7 @@ function App() {
         {activeTab === 'upload' && (
           <motion.div 
             key="upload" 
-            style={{ flex: 1, display: 'flex', width: '100%' }}
+            style={{ flex: 1, display: 'flex', width: '100%', overflowY: 'auto' }}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
