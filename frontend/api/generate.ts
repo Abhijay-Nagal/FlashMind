@@ -398,6 +398,19 @@ export default async function handler(req: Req, res: Res) {
   }
   if (req.method !== 'POST') return send(res, 405, { error: 'bad_request', message: 'Use POST' });
 
+  // Only the FlashMind web app itself may spend the server's AI quota.
+  const origin = req.headers.origin;
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  if (typeof origin === 'string' && host) {
+    try {
+      if (new URL(origin).host !== (Array.isArray(host) ? host[0] : host)) {
+        return send(res, 403, { error: 'bad_request', message: 'Cross-site requests are not allowed' } satisfies GenerateError);
+      }
+    } catch {
+      return send(res, 403, { error: 'bad_request', message: 'Bad origin' } satisfies GenerateError);
+    }
+  }
+
   // A user may bring their own key (Settings → AI key). It is only forwarded to the provider.
   const headerKey = req.headers['x-llm-key'];
   const userKey = (Array.isArray(headerKey) ? headerKey[0] : headerKey) || '';
