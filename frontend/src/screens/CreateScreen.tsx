@@ -28,6 +28,7 @@ const DENSITY_LABEL: Record<Density, { label: string; hint: string }> = {
 
 export function CreateScreen({ onStarted, onSettings }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const parseToken = useRef(0);
   const [parse, setParse] = useState<Parse>({ state: 'idle' });
   const [density, setDensity] = useState<Density>('balanced');
   const [engine, setEngine] = useState<'checking' | 'server' | 'key' | 'missing'>('checking');
@@ -55,11 +56,14 @@ export function CreateScreen({ onStarted, onSettings }: Props) {
       return;
     }
     haptic(8);
+    const token = ++parseToken.current;
+    const current = () => token === parseToken.current;
     setParse({ state: 'reading', name: file.name, size: file.size, done: 0, total: 0 });
     try {
-      const pdf = await extractPdf(file, (done, total) =>
-        setParse((p) => (p.state === 'reading' && p.name === file.name ? { ...p, done, total } : p)),
-      );
+      const pdf = await extractPdf(file, (done, total) => {
+        if (current()) setParse((p) => (p.state === 'reading' ? { ...p, done, total } : p));
+      });
+      if (!current()) return;
       const words = countWords(pdf.pages);
       if (words < 60) {
         throw new PdfError(
@@ -70,6 +74,7 @@ export function CreateScreen({ onStarted, onSettings }: Props) {
       sfx.pop();
       setParse({ state: 'ready', name: file.name, size: file.size, source: { fileName: file.name, pages: pdf.pages, words, title: pdf.title } });
     } catch (e) {
+      if (!current()) return;
       setParse({ state: 'error', name: file.name, message: e instanceof PdfError ? e.message : "We couldn't read this PDF. Try another file." });
     }
   };
@@ -81,6 +86,16 @@ export function CreateScreen({ onStarted, onSettings }: Props) {
     onStarted();
     setParse({ state: 'idle' });
   };
+
+  const mascotLine = (() => {
+    if (parse.state === 'reading') return 'Ooh, a new PDF! Reading it page by page…';
+    if (parse.state === 'error') return "Hmm, I couldn't read that one. Text-based PDFs work best.";
+    if (parse.state !== 'ready') return "I'll read your PDF, map its topics in order, then write a chain of cards and a quiz for each one.";
+    const n = parse.source.pages.length;
+    if (n < 12) return 'Short and sweet! I’ll pack its key ideas into a tight little deck.';
+    if (n < 60) return 'Nice chapter! I’ll turn every main idea into a topic you can swipe through.';
+    return 'That’s a big one! I’ll work through it section by section — you can start as soon as the first topics are ready.';
+  })();
 
   const est = parse.state === 'ready' ? estimateCards(parse.source.pages.length, parse.source.words, density) : 0;
   const topics = parse.state === 'ready' ? Math.max(2, Math.round(est / DENSITY[density].avgDepth)) : 0;
@@ -238,12 +253,18 @@ export function CreateScreen({ onStarted, onSettings }: Props) {
           <span>Your PDF is read on this device. Only its text is sent to the AI to write cards.</span>
         </div>
 
-        {parse.state === 'idle' && (
-          <div className="create-mascot">
-            <Mascot mood="think" size={84} />
-            <p>I'll read your PDF, map its topics in order, then write a chain of cards and a quiz for each one.</p>
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={parse.state}
+            className="create-mascot"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+          >
+            <Mascot mood={parse.state === 'ready' ? 'happy' : parse.state === 'error' ? 'sad' : parse.state === 'reading' ? 'wow' : 'think'} size={84} />
+            <p>{mascotLine}</p>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -109,6 +109,28 @@
   margin-top: -6vh;
 }
 
+.splash-logo {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.splash-ring {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 194, 71, 0.8);
+}
+
+.splash-spark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  transform: rotate(45deg);
+}
+
 .splash-word {
   font-size: clamp(44px, 12vw, 64px);
   font-weight: 800;

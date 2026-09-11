@@ -3,13 +3,24 @@ import { motion } from 'framer-motion';
 import { LogoMark } from './LogoMark';
 import { Mascot } from '../mascot/Mascot';
 
+const SPARKS: [number, number, string][] = [
+  [-86, -40, '#FFC247'],
+  [84, -52, '#FF5FA2'],
+  [-70, 58, '#8C6DFF'],
+  [92, 40, '#3DDC97'],
+  [0, -96, '#FFFFFF'],
+  [-104, 4, '#FF5FA2'],
+  [104, -6, '#FFC247'],
+  [18, 92, '#FFFFFF'],
+];
+
 interface Props {
   onDone: () => void;
 }
 
 export function SplashScreen({ onDone }: Props) {
   useEffect(() => {
-    const t = setTimeout(onDone, 2600);
+    const t = setTimeout(onDone, 3000);
     return () => clearTimeout(t);
   }, [onDone]);
 
@@ -30,7 +41,25 @@ export function SplashScreen({ onDone }: Props) {
         transition={{ duration: 1.2, ease: 'easeOut' }}
       />
       <div className="splash-center">
-        <LogoMark size={132} animated />
+        <div className="splash-logo">
+          <motion.span
+            className="splash-ring"
+            initial={{ scale: 0.3, opacity: 0 }}
+            animate={{ scale: [0.3, 1.6], opacity: [0, 0.6, 0] }}
+            transition={{ delay: 0.55, duration: 1.1, ease: 'easeOut' }}
+          />
+          {SPARKS.map(([x, y, c], i) => (
+            <motion.span
+              key={i}
+              className="splash-spark"
+              style={{ background: c }}
+              initial={{ x: 0, y: 0, rotate: 45, scale: 0, opacity: 0 }}
+              animate={{ x, y, rotate: 45, scale: [0, 1.2, 0], opacity: [0, 1, 0] }}
+              transition={{ delay: 0.6 + i * 0.02, duration: 0.9, ease: 'easeOut' }}
+            />
+          ))}
+          <LogoMark size={132} animated />
+        </div>
         <h1 className="splash-word" aria-label="FlashMind">
           {word.map((ch, i) => (
             <motion.span
