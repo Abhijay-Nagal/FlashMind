@@ -22,12 +22,12 @@ export function LogoMark({ size = 40, animated = false }: Props) {
     <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
       <defs>
         <linearGradient id="lm-front" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#A88FFF" />
-          <stop offset="1" stopColor="#5B34EE" />
+          <stop offset="0" stopColor="#22DCD2" />
+          <stop offset="1" stopColor="#008893" />
         </linearGradient>
       </defs>
-      <motion.rect x="27" y="16" width="46" height="64" rx="11" {...card(0.05, -18, '#FFB020', 90)} />
-      <motion.rect x="27" y="16" width="46" height="64" rx="11" {...card(0.18, -6, '#FF5FA2', 90)} />
+      <motion.rect x="27" y="16" width="46" height="64" rx="11" {...card(0.05, -18, '#FF4D78', 90)} />
+      <motion.rect x="27" y="16" width="46" height="64" rx="11" {...card(0.18, -6, '#01FFC3', 90)} />
       <motion.g {...card(0.32, 8, 'url(#lm-front)', 90)}>
         <rect x="27" y="16" width="46" height="64" rx="11" />
         <motion.path

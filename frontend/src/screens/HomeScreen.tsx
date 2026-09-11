@@ -268,7 +268,7 @@ export function HomeScreen({ onOpenDeck, onCreate, onSettings, onShowGeneration,
             </div>
           </div>
           <div className="how-item">
-            <span className="how-ic" style={{ background: 'rgba(255,95,162,.14)', color: 'var(--pink)' }}>
+            <span className="how-ic" style={{ background: 'rgba(255,77,120,.14)', color: 'var(--pink)' }}>
               <Quote size={18} fill="currentColor" />
             </span>
             <div>

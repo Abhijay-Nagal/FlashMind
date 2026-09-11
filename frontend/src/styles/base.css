@@ -5,42 +5,51 @@
   --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-rounded, system-ui, sans-serif;
   --font-body: 'Figtree Variable', 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  --bg: #f4f1ff;
-  --bg-soft: #ebe6ff;
+  /* brand: deep sea #021F28 · aqua mint #01FFC3 · teal #00B5B5 · coral #FF4D78 */
+  --bg: #edf8f6;
+  --bg-soft: #e0f3f0;
   --surface: #ffffff;
-  --surface-2: #f5f2ff;
-  --surface-3: #ebe6ff;
-  --line: rgba(40, 25, 95, 0.09);
-  --line-strong: rgba(40, 25, 95, 0.16);
-  --text: #19132f;
-  --text-2: #4a4368;
-  --text-3: #7b7599;
+  --surface-2: #f2fbf9;
+  --surface-3: #dbefec;
+  --line: rgba(2, 31, 40, 0.09);
+  --line-strong: rgba(2, 31, 40, 0.16);
+  --text: #042a33;
+  --text-2: #335c63;
+  --text-3: #6a8d92;
 
-  --primary: #6c47ff;
-  --primary-2: #8d6dff;
-  --primary-ink: #4b27e0;
-  --primary-soft: rgba(108, 71, 255, 0.12);
-  --on-primary: #ffffff;
-  --accent: #ffb020;
-  --accent-ink: #9a5b00;
-  --accent-soft: rgba(255, 176, 32, 0.18);
-  --pink: #ff5fa2;
-  --mint: #12a86e;
-  --mint-soft: rgba(18, 168, 110, 0.13);
-  --danger: #e53950;
-  --danger-soft: rgba(229, 57, 80, 0.12);
+  --primary: #00a3a3;
+  --primary-2: #00c9b7;
+  --primary-ink: #00707a;
+  --primary-soft: rgba(0, 163, 163, 0.12);
+  --on-primary: #021f28;
+  --accent: #00c99c;
+  --accent-ink: #007a5e;
+  --accent-soft: rgba(0, 201, 156, 0.16);
+  --pink: #ff4d78;
+  --mint: #0ea968;
+  --mint-soft: rgba(14, 169, 104, 0.13);
+  --danger: #e8435f;
+  --danger-soft: rgba(232, 67, 95, 0.12);
+
+  --grad-primary: linear-gradient(135deg, #01ffc3 0%, #00d4c0 45%, #00a8ab 100%);
+  --grad-pop: linear-gradient(135deg, #ff7a98 0%, #ff4d78 55%, #e8335f 100%);
+  --grad-hero: linear-gradient(125deg, #01f2bf 0%, #00c4bb 42%, #0a8aa0 100%);
+  --grad-deep: linear-gradient(135deg, #12bdb5 0%, #078393 55%, #075466 100%);
+  --on-grad: #021f28;
+  --glow-primary: rgba(0, 190, 180, 0.55);
+  --glow-pop: rgba(255, 77, 120, 0.5);
 
   --glass: rgba(255, 255, 255, 0.86);
-  --primary-line: rgba(108, 71, 255, 0.4);
-  --rail-done: #b9a6ff;
+  --primary-line: rgba(0, 163, 163, 0.4);
+  --rail-done: #8fd8d2;
 
-  --blob-1: rgba(124, 77, 255, 0.22);
-  --blob-2: rgba(255, 176, 32, 0.18);
-  --blob-3: rgba(255, 95, 162, 0.14);
+  --blob-1: rgba(0, 181, 181, 0.2);
+  --blob-2: rgba(1, 255, 195, 0.2);
+  --blob-3: rgba(255, 77, 120, 0.1);
 
-  --shadow-sm: 0 1px 2px rgba(30, 20, 70, 0.06), 0 2px 10px rgba(30, 20, 70, 0.06);
-  --shadow-md: 0 10px 30px rgba(30, 20, 70, 0.12);
-  --shadow-lg: 0 24px 60px rgba(30, 20, 70, 0.22);
+  --shadow-sm: 0 1px 2px rgba(2, 31, 40, 0.06), 0 2px 10px rgba(2, 31, 40, 0.06);
+  --shadow-md: 0 10px 30px rgba(2, 31, 40, 0.12);
+  --shadow-lg: 0 24px 60px rgba(2, 31, 40, 0.22);
 
   --radius-sm: 12px;
   --radius: 20px;
@@ -55,36 +64,36 @@
 }
 
 :root[data-theme='dark'] {
-  --bg: #0c0a1b;
-  --bg-soft: #141029;
-  --surface: #19142f;
-  --surface-2: #211b3d;
-  --surface-3: #2b244f;
+  --bg: #021f28;
+  --bg-soft: #052a35;
+  --surface: #07303b;
+  --surface-2: #0b3a46;
+  --surface-3: #114856;
   --line: rgba(255, 255, 255, 0.08);
   --line-strong: rgba(255, 255, 255, 0.15);
-  --text: #f4f1ff;
-  --text-2: #c4bde6;
-  --text-3: #8f88b4;
+  --text: #e8fbf8;
+  --text-2: #a6d1cf;
+  --text-3: #6c9ca1;
 
-  --primary: #8c6dff;
-  --primary-2: #a88fff;
-  --primary-ink: #c4b4ff;
-  --primary-soft: rgba(140, 109, 255, 0.2);
-  --accent: #ffc247;
-  --accent-ink: #ffd27a;
-  --accent-soft: rgba(255, 194, 71, 0.16);
-  --mint: #3ddc97;
-  --mint-soft: rgba(61, 220, 151, 0.14);
-  --danger: #ff5c6c;
-  --danger-soft: rgba(255, 92, 108, 0.14);
+  --primary: #1fd4cb;
+  --primary-2: #01ffc3;
+  --primary-ink: #86f5e6;
+  --primary-soft: rgba(31, 212, 203, 0.16);
+  --accent: #01ffc3;
+  --accent-ink: #5cffd6;
+  --accent-soft: rgba(1, 255, 195, 0.13);
+  --mint: #3be9a2;
+  --mint-soft: rgba(59, 233, 162, 0.14);
+  --danger: #ff5a80;
+  --danger-soft: rgba(255, 90, 128, 0.15);
 
-  --glass: rgba(25, 20, 47, 0.86);
-  --primary-line: rgba(140, 109, 255, 0.45);
-  --rail-done: #5a4a9e;
+  --glass: rgba(7, 48, 59, 0.86);
+  --primary-line: rgba(31, 212, 203, 0.45);
+  --rail-done: #1b6d73;
 
-  --blob-1: rgba(124, 77, 255, 0.28);
-  --blob-2: rgba(255, 176, 32, 0.1);
-  --blob-3: rgba(255, 95, 162, 0.12);
+  --blob-1: rgba(0, 181, 181, 0.24);
+  --blob-2: rgba(1, 255, 195, 0.08);
+  --blob-3: rgba(255, 77, 120, 0.11);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 10px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -314,19 +323,15 @@ svg {
 }
 
 .btn-primary {
-  color: var(--on-primary);
-  background: linear-gradient(135deg, var(--primary-2), var(--primary) 60%, var(--primary-ink));
-  box-shadow: 0 10px 24px -8px var(--primary), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-:root[data-theme='dark'] .btn-primary {
-  background: linear-gradient(135deg, #a88fff, #7c4dff 60%, #5b34ee);
+  color: var(--on-grad);
+  background: var(--grad-primary);
+  box-shadow: 0 12px 26px -10px var(--glow-primary), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .btn-accent {
-  color: #2b1800;
-  background: linear-gradient(135deg, #ffd66b, #ffb020);
-  box-shadow: 0 10px 24px -10px #ffa41b, inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  color: #fff;
+  background: var(--grad-pop);
+  box-shadow: 0 12px 26px -10px var(--glow-pop), inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .btn-soft {
@@ -583,9 +588,9 @@ svg {
   border-radius: 22px;
   display: grid;
   place-items: center;
-  color: #fff;
-  background: linear-gradient(140deg, #a88fff, #6c47ff 55%, #4b27e0);
-  box-shadow: 0 14px 28px -10px #6c47ff, 0 0 0 5px var(--bg), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  color: var(--on-grad);
+  background: var(--grad-primary);
+  box-shadow: 0 14px 28px -10px var(--glow-primary), 0 0 0 5px var(--bg), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   transition: transform 0.18s var(--ease-out);
 }
 
@@ -594,9 +599,9 @@ svg {
 }
 
 .tab-fab.active {
-  background: linear-gradient(140deg, #ffd66b, #ffb020);
-  color: #2b1800;
-  box-shadow: 0 14px 28px -10px #ffa41b, 0 0 0 5px var(--bg);
+  background: var(--grad-pop);
+  color: #fff;
+  box-shadow: 0 14px 28px -10px var(--glow-pop), 0 0 0 5px var(--bg);
 }
 
 /* switch */

@@ -52,7 +52,7 @@
 }
 
 .icon-btn.starred {
-  color: #ffb020;
+  color: #ff4d78;
 }
 
 .topic-rail {
@@ -98,7 +98,7 @@
   height: 5px;
   margin-top: -5px;
   border-radius: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--pink));
+  background: linear-gradient(90deg, var(--primary), var(--accent));
   transition: width 0.4s var(--ease-out);
 }
 
@@ -618,12 +618,12 @@
 
 .hold-ring circle {
   fill: rgba(255, 255, 255, 0.16);
-  stroke: #ffc247;
+  stroke: #01ffc3;
   stroke-width: 5;
   stroke-linecap: round;
   stroke-dasharray: 176;
   stroke-dashoffset: 176;
-  filter: drop-shadow(0 0 6px rgba(255, 176, 32, 0.7));
+  filter: drop-shadow(0 0 6px rgba(1, 255, 195, 0.75));
   animation: holdFill 320ms linear forwards;
 }
 
@@ -679,16 +679,16 @@
 }
 
 .ctl-main {
-  color: #fff;
+  color: var(--on-grad);
   border: 0;
-  background: linear-gradient(140deg, #a88fff, #6c47ff 60%, #4b27e0);
-  box-shadow: 0 10px 22px -10px #6c47ff;
+  background: var(--grad-primary);
+  box-shadow: 0 10px 22px -10px var(--glow-primary);
 }
 
 .ctl-main.on {
-  color: #2b1800;
-  background: linear-gradient(140deg, #ffd66b, #ffb020);
-  box-shadow: 0 10px 22px -10px #ffa41b;
+  color: #fff;
+  background: var(--grad-pop);
+  box-shadow: 0 10px 22px -10px var(--glow-pop);
 }
 
 .ctl-badge {
@@ -704,8 +704,8 @@
   font-style: normal;
   font-size: 10.5px;
   font-weight: 800;
-  background: var(--accent);
-  color: #2b1800;
+  background: #ff4d78;
+  color: #fff;
 }
 
 .ctl-dot {
@@ -719,11 +719,11 @@
 }
 
 .ctl-dot.ok {
-  background: #3ddc97;
+  background: #01ffc3;
 }
 
 .ctl-dot.no {
-  background: #ff5c6c;
+  background: #ff4d78;
 }
 
 /* mascot reaction */
@@ -761,8 +761,8 @@
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
-  color: #2b1800;
-  background: linear-gradient(180deg, #ffd66b, #ffb020);
+  color: var(--on-grad);
+  background: var(--grad-primary);
 }
 
 /* deck map */
@@ -934,7 +934,7 @@
   flex-direction: column;
   justify-content: flex-end;
   gap: 10px;
-  background: linear-gradient(150deg, #7c4dff, #4b22c9);
+  background: linear-gradient(150deg, #00c2bd, #00717f);
   box-shadow: 0 24px 40px -16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 

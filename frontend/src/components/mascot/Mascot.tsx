@@ -12,7 +12,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const INK = '#1A1433';
+const INK = '#021F28';
 
 const bodyAnim: Record<Mood, TargetAndTransition> = {
   idle: { y: [0, -3, 0], rotate: 0, transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' } },
@@ -91,8 +91,8 @@ export function Mascot({ mood = 'idle', size = 120, track = false, className = '
     >
       <defs>
         <linearGradient id="fm-body" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#9C7BFF" />
-          <stop offset="1" stopColor="#5B34EE" />
+          <stop offset="0" stopColor="#3DEBDB" />
+          <stop offset="1" stopColor="#00A2A8" />
         </linearGradient>
         <linearGradient id="fm-bolt" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#FFD66B" />
@@ -106,7 +106,7 @@ export function Mascot({ mood = 'idle', size = 120, track = false, className = '
         cy="131"
         rx="30"
         ry="5"
-        fill="rgba(20,10,60,.22)"
+        fill="rgba(2,31,40,.22)"
         animate={mood === 'happy' || mood === 'wow' || mood === 'laugh' ? { scaleX: [1, 0.7, 1] } : { scaleX: 1 }}
         transition={{ duration: 0.8 }}
         style={{ transformOrigin: '70px 131px' }}
@@ -114,8 +114,8 @@ export function Mascot({ mood = 'idle', size = 120, track = false, className = '
 
       <motion.g key={mood} animate={bodyAnim[mood]} style={{ transformOrigin: '70px 120px' }}>
         {/* a card peeking from behind */}
-        <rect x="36" y="30" width="74" height="88" rx="20" fill="#FFC247" transform="rotate(-11 73 74)" />
-        <rect x="36" y="30" width="74" height="88" rx="20" fill="#FF7EB6" opacity=".9" transform="rotate(8 73 74)" />
+        <rect x="36" y="30" width="74" height="88" rx="20" fill="#FF4D78" transform="rotate(-11 73 74)" />
+        <rect x="36" y="30" width="74" height="88" rx="20" fill="#01FFC3" opacity=".95" transform="rotate(8 73 74)" />
 
         {/* lightning tuft */}
         <motion.path
@@ -130,10 +130,10 @@ export function Mascot({ mood = 'idle', size = 120, track = false, className = '
         />
 
         {/* arms */}
-        <path d="M31 84 Q18 90 16 100" stroke="#5B34EE" strokeWidth="8" strokeLinecap="round" fill="none" />
+        <path d="M31 84 Q18 90 16 100" stroke="#008A91" strokeWidth="8" strokeLinecap="round" fill="none" />
         <motion.path
           d={mood === 'wave' || mood === 'laugh' || mood === 'wow' ? 'M109 80 Q122 70 124 56' : 'M109 84 Q122 90 124 100'}
-          stroke="#5B34EE"
+          stroke="#008A91"
           strokeWidth="8"
           strokeLinecap="round"
           fill="none"
@@ -143,8 +143,8 @@ export function Mascot({ mood = 'idle', size = 120, track = false, className = '
         />
 
         {/* feet */}
-        <rect x="48" y="114" width="16" height="12" rx="6" fill="#4A27D6" />
-        <rect x="76" y="114" width="16" height="12" rx="6" fill="#4A27D6" />
+        <rect x="48" y="114" width="16" height="12" rx="6" fill="#00707A" />
+        <rect x="76" y="114" width="16" height="12" rx="6" fill="#00707A" />
 
         {/* body */}
         <rect x="28" y="28" width="84" height="92" rx="24" fill="url(#fm-body)" />
@@ -186,8 +186,8 @@ export function Mascot({ mood = 'idle', size = 120, track = false, className = '
         )}
 
         {/* cheeks */}
-        <ellipse cx="42" cy="87" rx="6.5" ry="4" fill="#FF8DC0" opacity={mood === 'sad' ? 0.3 : 0.75} />
-        <ellipse cx="98" cy="87" rx="6.5" ry="4" fill="#FF8DC0" opacity={mood === 'sad' ? 0.3 : 0.75} />
+        <ellipse cx="42" cy="87" rx="6.5" ry="4" fill="#FF8AA5" opacity={mood === 'sad' ? 0.3 : 0.75} />
+        <ellipse cx="98" cy="87" rx="6.5" ry="4" fill="#FF8AA5" opacity={mood === 'sad' ? 0.3 : 0.75} />
 
         {/* mouth */}
         <Mouth mood={mood} />
@@ -244,14 +244,14 @@ function Mouth({ mood }: { mood: Mood }) {
       return (
         <g>
           <path d="M58 88 Q70 104 82 88 Z" fill={INK} strokeLinejoin="round" stroke={INK} strokeWidth="2" />
-          <path d="M64 96 Q70 100 76 96 Q70 93 64 96 Z" fill="#FF7EB6" />
+          <path d="M64 96 Q70 100 76 96 Q70 93 64 96 Z" fill="#FF7A98" />
         </g>
       );
     case 'laugh':
       return (
         <g>
           <path d="M55 86 Q70 110 85 86 Z" fill={INK} stroke={INK} strokeWidth="2" strokeLinejoin="round" />
-          <path d="M62 98 Q70 104 78 98 Q70 94 62 98 Z" fill="#FF7EB6" />
+          <path d="M62 98 Q70 104 78 98 Q70 94 62 98 Z" fill="#FF7A98" />
         </g>
       );
     case 'sad':
@@ -280,7 +280,7 @@ function Sparkles() {
         <motion.path
           key={i}
           d={`M${x} ${y - 7} L${x + 2} ${y - 2} L${x + 7} ${y} L${x + 2} ${y + 2} L${x} ${y + 7} L${x - 2} ${y + 2} L${x - 7} ${y} L${x - 2} ${y - 2} Z`}
-          fill={i % 2 ? '#FFC247' : '#FF7EB6'}
+          fill={i % 2 ? '#01FFC3' : '#FF4D78'}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: [0, 1.2, 0], opacity: [0, 1, 0] }}
           transition={{ duration: 1, delay: d, repeat: 2 }}

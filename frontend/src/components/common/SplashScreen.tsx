@@ -4,13 +4,13 @@ import { LogoMark } from './LogoMark';
 import { Mascot } from '../mascot/Mascot';
 
 const SPARKS: [number, number, string][] = [
-  [-86, -40, '#FFC247'],
-  [84, -52, '#FF5FA2'],
-  [-70, 58, '#8C6DFF'],
-  [92, 40, '#3DDC97'],
+  [-86, -40, '#01FFC3'],
+  [84, -52, '#FF4D78'],
+  [-70, 58, '#00B5B5'],
+  [92, 40, '#FFD166'],
   [0, -96, '#FFFFFF'],
-  [-104, 4, '#FF5FA2'],
-  [104, -6, '#FFC247'],
+  [-104, 4, '#FF4D78'],
+  [104, -6, '#01FFC3'],
   [18, 92, '#FFFFFF'],
 ];
 
