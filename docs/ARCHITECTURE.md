@@ -16,8 +16,8 @@
 
 * **Why the PDF never leaves the phone**: Vercel functions accept ≤ 4.5 MB bodies and textbooks are
   bigger than that. Extracting text locally is faster, private, and keeps each request small.
-* **Card budget** (`src/lib/planner.ts`): `cards ≈ 0.3 × effectivePages`, where effective pages blend
-  the page count with the word count (a 100-page textbook ≈ 30 cards). Density multiplies it
+* **Card budget** (`src/lib/planner.ts`): `cards ≈ 3 × √effectivePages`, where effective pages blend
+  the page count with the word count (100 pages ≈ 30 cards, a 15-page paper ≈ 12, a 300-page book ≈ 52). Density multiplies it
   (Light ×0.6, Balanced ×1, Deep ×1.6). Topics ≈ cards / 3, each topic is a chain of 2–4 cards.
 * **Sections**: contiguous page ranges with equal amounts of text, ≤ 4 topics each. Every section is
   capped at ~9 000 characters; when a range is longer each page is condensed proportionally (headings

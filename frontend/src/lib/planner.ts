@@ -2,9 +2,10 @@
  * Decides how many cards a PDF deserves and splits it into sections that are
  * each sent to the LLM separately.
  *
- * Rule of thumb from the brief: ~30 cards for a 100-page PDF. Page count and
- * word count are blended so a dense 20-page paper and a slide deck of 20 pages
- * are treated differently.
+ * Rule of thumb from the brief: ~30 cards for a 100-page PDF, growing with the
+ * square root of length so short papers still get a useful deck and huge books
+ * don't explode. Page count and word count are blended so a dense 20-page paper
+ * and a 20-slide deck are treated differently.
  */
 
 export type Density = 'light' | 'balanced' | 'deep';
@@ -39,7 +40,8 @@ export interface Plan {
 export function estimateCards(pageCount: number, words: number, density: Density) {
   const cfg = DENSITY[density];
   const effectivePages = (pageCount + words / 450) / 2;
-  const raw = Math.round(effectivePages * 0.3 * cfg.mult);
+  // 3·√pages → 30 cards for 100 pages, ~12 for a 15-page paper, ~52 for a 300-page book
+  const raw = Math.round(3 * Math.sqrt(effectivePages) * cfg.mult);
   // very short documents can't support many distinct cards
   const ceiling = Math.max(cfg.min, Math.floor(words / 45));
   return Math.max(cfg.min, Math.min(MAX_CARDS, ceiling, raw));

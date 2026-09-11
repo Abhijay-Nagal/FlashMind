@@ -24,7 +24,8 @@ CARD_KINDS = {"core", "detail", "example", "formula", "comparison", "application
 SYSTEM_PROMPT = (
     "You are FlashMind, an expert teacher who turns study material into a connected deck of flashcards "
     "for university students. Use ONLY facts stated in the material - never invent facts. "
-    "Write clear, friendly, precise English. Respond with a single JSON object and nothing else."
+    "Write clear, friendly, precise text in the language of the material (English if unsure). "
+    "Respond with a single JSON object and nothing else."
 )
 
 
@@ -105,7 +106,7 @@ def _s(v, max_len: int = 400) -> str:
     if not isinstance(v, str):
         return ""
     v = re.sub(r"\s+", " ", v).replace("**", "")
-    v = re.sub("[‐‑]", "-", v)
+    v = re.sub("[\u2010\u2011]", "-", v)
     return v.strip()[:max_len]
 
 

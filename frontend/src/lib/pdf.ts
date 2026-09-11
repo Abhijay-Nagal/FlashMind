@@ -92,7 +92,7 @@ export function cleanPages(pages: string[]): string[] {
   const lineCounts = new Map<string, number>();
   const split = pages.map((p) =>
     p
-      .replace(/­/g, '')
+      .replace(/\u00AD/g, '')
       .replace(/(\w)-\n(\w)/g, '$1$2')
       .split('\n')
       .map((l) => l.replace(/[ \t]+/g, ' ').trim())

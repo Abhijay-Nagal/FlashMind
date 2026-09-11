@@ -82,7 +82,8 @@ const CARD_KINDS = ['core', 'detail', 'example', 'formula', 'comparison', 'appli
 const SYSTEM_PROMPT =
   'You are FlashMind, an expert teacher who turns study material into a connected deck of flashcards ' +
   'for university students. Use ONLY facts stated in the material - never invent facts. ' +
-  'Write clear, friendly, precise English. Respond with a single JSON object and nothing else.';
+  'Write clear, friendly, precise text in the language of the material (English if unsure). ' +
+  'Respond with a single JSON object and nothing else.';
 
 export function buildMessages(req: GenerateRequest) {
   const { section } = req;
@@ -144,14 +145,14 @@ function str(v: unknown, max = 400): string {
   return v
     .replace(/\s+/g, ' ')
     .replace(/\*\*/g, '')
-    .replace(/[‐‑]/g, '-') // non-breaking hyphens are missing from many fonts
+    .replace(/[\u2010\u2011]/g, '-') // non-breaking hyphens are missing from many fonts
     .trim()
     .slice(0, max);
 }
 
 function firstEmoji(v: unknown, fallback: string): string {
   if (typeof v !== 'string') return fallback;
-  const m = v.match(/\p{Extended_Pictographic}(️|‍\p{Extended_Pictographic})*/u);
+  const m = v.match(/\p{Extended_Pictographic}(\uFE0F|\u200D\p{Extended_Pictographic})*/u);
   return m ? m[0] : fallback;
 }
 
