@@ -95,7 +95,7 @@ export function buildMessages(req: GenerateRequest) {
 
   const user = `Document: "${req.docName}". This is section ${section.index + 1} of ${section.total} (${pages}).
 
-Create exactly ${req.topicCount} topics from this section, in the order they appear in the text. A topic is one distinct concept, process, definition or idea. Together the topics must cover the WHOLE section, not just the beginning.
+Create exactly ${req.topicCount} topics from this section, in the order they appear in the text. A topic is one distinct concept, process, definition or idea. Together the topics must cover the WHOLE section, not just the beginning. Ignore reference lists, citations, acknowledgements, author lists and tables of contents.
 
 Each topic is a chain of ${req.minDepth} to ${req.maxDepth} cards (give richer topics more cards):
 - Card 1 has kind "core": the essential idea of the topic, understandable on its own.

@@ -81,7 +81,7 @@ export async function extractPdf(
     } catch {
       /* no metadata */
     }
-    return { pages: cleanPages(pages), title };
+    return { pages: stripBackMatter(cleanPages(pages)), title };
   } finally {
     void task.destroy();
   }
@@ -119,4 +119,41 @@ export function countWords(pages: string[]) {
   let n = 0;
   for (const p of pages) n += p.split(/\s+/).filter(Boolean).length;
   return n;
+}
+
+const REF_HEADING = /^\s*(\d+(\.\d+)*\.?\s*)?(references|bibliography|works cited|literature cited|reference list)\s*$/i;
+const CITATION = new RegExp(
+  [
+    String.raw`\(\d{4}[a-z]?\)`, // (2016)
+    String.raw`\b(19|20)\d{2}[a-z]?\.?\s*$`, // line ends with a year
+    String.raw`,\s*(19|20)\d{2}[a-z]?[.,]`, // ", 2016."
+    String.raw`\b(pp\.|vol\.|pages \d+|arxiv|doi|proceedings|journal|conference|preprint|in advances in)\b`,
+    String.raw`\bet al\.`,
+    String.raw`^\s*\[[A-Za-z0-9+\-.,\s]{1,14}\]`, // [12] / [ADG+16]
+  ].join('|'),
+  'i',
+);
+
+function citationDensity(text: string) {
+  const lines = text.split('\n').filter((l) => l.trim().length > 12);
+  if (lines.length < 4) return 0;
+  return lines.filter((l) => CITATION.test(l)).length / lines.length;
+}
+
+/**
+ * Blanks out reference lists so no cards are written about citations.
+ * Pages are kept (as empty strings) so page numbers still match the PDF.
+ */
+export function stripBackMatter(pages: string[]): string[] {
+  const out = pages.slice();
+  // only look for the heading in the second half of the document
+  for (let i = Math.floor(pages.length / 2); i < pages.length; i++) {
+    const lines = out[i].split('\n');
+    const at = lines.findIndex((l) => REF_HEADING.test(l));
+    if (at < 0) continue;
+    out[i] = lines.slice(0, at).join('\n');
+    for (let j = i + 1; j < pages.length && citationDensity(out[j]) > 0.25; j++) out[j] = '';
+    break;
+  }
+  return out;
 }
