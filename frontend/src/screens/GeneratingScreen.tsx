@@ -7,6 +7,7 @@ import { topicGradient } from '../lib/palette';
 import { celebrate } from '../lib/confetti';
 import { haptic, sfx } from '../lib/feedback';
 import { useBackHandler } from '../lib/backHandler';
+import { toast } from '../lib/toast';
 
 interface Props {
   open: boolean;
@@ -73,6 +74,18 @@ export function GeneratingScreen({ open, onMinimize, onStudy, onSettings, onSamp
       haptic([20, 60, 30]);
     }
   }, [open, job?.phase, job?.id]);
+
+  // cancelled: close the overlay, keep whatever was already written
+  const onMinimizeRef = useRef(onMinimize);
+  useEffect(() => {
+    onMinimizeRef.current = onMinimize;
+  });
+  useEffect(() => {
+    if (job?.phase !== 'cancelled') return;
+    toast(job.deckId ? `Stopped — kept the ${job.cardsDone} cards already made` : 'Card creation cancelled', '✋');
+    dismissJob();
+    onMinimizeRef.current();
+  }, [job?.phase, job?.deckId, job?.cardsDone]);
 
   const prevCount = useRef(0);
   useEffect(() => {
