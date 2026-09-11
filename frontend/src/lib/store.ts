@@ -77,7 +77,8 @@ function save(key: string, value: unknown) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    /* quota / private mode: keep working in memory */
+    // quota exceeded / private mode: keep working in memory and tell the user
+    window.dispatchEvent(new CustomEvent('fm-storage-full'));
   }
 }
 

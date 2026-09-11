@@ -76,12 +76,23 @@ export function StudyScreen({ deckId, onExit, onQuiz }: Props) {
     [nextDir],
   );
 
-  // record progress whenever a card is shown
+  // record progress whenever a card is shown, and celebrate small wins
   useEffect(() => {
-    if (!deck || !card) return;
-    actions.markSeen(deck.id, card.id);
+    if (!deck || !card || !topic) return;
+    const streakBefore = getState().stats.lastActiveDay;
+    const gained = actions.markSeen(deck.id, card.id);
     actions.setPosition(deck.id, pos.topic, pos.depth);
-  }, [deck, card, pos.topic, pos.depth]);
+    if (!gained) return;
+    const s = getState();
+    if (streakBefore !== s.stats.lastActiveDay && s.stats.streak > 1) {
+      toast(`${s.stats.streak}-day streak! Keep it going`, '🔥');
+    } else if (s.stats.today.cards === s.settings.dailyGoal) {
+      toast(`Daily goal reached — ${s.settings.dailyGoal} cards!`, '🎯');
+      sfx.win();
+    } else if (topic.cards.length > 1 && topic.cards.every((c) => s.progress[deck.id]?.cards[c.id]?.seen)) {
+      toast(`“${topic.title}” fully explored`, '🧠', 1800);
+    }
+  }, [deck, card, topic, pos.topic, pos.depth]);
 
   const commit = useCallback(
     (m: Move) => {

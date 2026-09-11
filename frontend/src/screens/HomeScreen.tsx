@@ -26,7 +26,7 @@ import { actions, deckStats, levelFromXp, liveStreak, todayCount, useStore } fro
 import { useGenJob } from '../lib/generator';
 import { topicGradient } from '../lib/palette';
 import { greeting, timeAgo } from '../lib/util';
-import { createSampleDeck } from '../data/sampleDeck';
+import { ensureSampleDeck } from '../data/sampleDeck';
 import { useInstallPrompt } from '../lib/install';
 import { haptic, sfx } from '../lib/feedback';
 import type { Deck } from '../types/deck';
@@ -91,12 +91,7 @@ export function HomeScreen({ onOpenDeck, onCreate, onSettings, onShowGeneration,
     window.setTimeout(() => setMascotMood('idle'), 1600);
   };
 
-  const addSample = () => {
-    const d = createSampleDeck();
-    actions.upsertDeck(d);
-    actions.setFlag({ sampleAdded: true });
-    onOpenDeck(d.id);
-  };
+  const addSample = () => onOpenDeck(ensureSampleDeck());
 
   return (
     <div className="scroll">

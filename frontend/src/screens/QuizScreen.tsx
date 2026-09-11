@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, ChevronRight, RotateCcw, X } from 'lucide-react';
 import { actions, getState, useStore } from '../lib/store';
@@ -42,6 +42,7 @@ export function QuizScreen({ deckId, mode, onExit }: Props) {
   const [pick, setPick] = useState<number | null>(null);
   const [results, setResults] = useState<boolean[]>([]);
   const [xp, setXp] = useState(0);
+  const advancing = useRef(false);
   useBackHandler(true, onExit);
 
   const done = index >= pool.length;
@@ -66,6 +67,9 @@ export function QuizScreen({ deckId, mode, onExit }: Props) {
   };
 
   const next = () => {
+    if (advancing.current || pick === null) return;
+    advancing.current = true;
+    window.setTimeout(() => (advancing.current = false), 350);
     setPick(null);
     setIndex((i) => i + 1);
     if (index + 1 >= pool.length) {

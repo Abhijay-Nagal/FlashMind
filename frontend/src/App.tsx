@@ -10,10 +10,11 @@ import { StatsScreen } from './screens/StatsScreen';
 import { StudyScreen } from './screens/StudyScreen';
 import { QuizScreen } from './screens/QuizScreen';
 import { GeneratingScreen } from './screens/GeneratingScreen';
-import { actions, useStore } from './lib/store';
+import { useStore } from './lib/store';
 import { dismissJob, getGenJob } from './lib/generator';
 import { useBackHandler } from './lib/backHandler';
-import { createSampleDeck } from './data/sampleDeck';
+import { ensureSampleDeck } from './data/sampleDeck';
+import { toast } from './lib/toast';
 
 type QuizMode = 'mix' | 'mistakes' | 'starred';
 type Route = { name: 'tabs' } | { name: 'study'; deckId: string } | { name: 'quiz'; deckId: string; mode: QuizMode };
@@ -41,6 +42,12 @@ export default function App() {
   const [genOpen, setGenOpen] = useState(false);
 
   useTheme();
+
+  useEffect(() => {
+    const full = () => toast('Storage is full — delete an old deck to keep saving progress', '💾', 4000);
+    window.addEventListener('fm-storage-full', full);
+    return () => window.removeEventListener('fm-storage-full', full);
+  }, []);
   useBackHandler(route.name === 'tabs' && tab !== 'home', () => setTab('home'));
 
   const endSplash = useCallback(() => setSplash(false), []);
@@ -53,9 +60,7 @@ export default function App() {
 
   const openSample = useCallback(() => {
     dismissJob();
-    const d = createSampleDeck();
-    actions.upsertDeck(d);
-    openDeck(d.id);
+    openDeck(ensureSampleDeck());
   }, [openDeck]);
 
   return (

@@ -26,10 +26,22 @@ export async function extractPdf(
 ): Promise<ExtractedPdf> {
   if (file.size > MAX_PDF_BYTES) throw new PdfError('too_big', 'That PDF is larger than 60 MB. Try a smaller file.');
 
-  const [pdfjs, worker] = await Promise.all([
-    import('pdfjs-dist/legacy/build/pdf.mjs'),
-    import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
-  ]);
+  let pdfjs: typeof import('pdfjs-dist/legacy/build/pdf.mjs');
+  let worker: { default: string };
+  try {
+    [pdfjs, worker] = await Promise.all([
+      import('pdfjs-dist/legacy/build/pdf.mjs'),
+      import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
+    ]);
+  } catch {
+    // a new version was deployed and the old chunk is gone: reload once to pick it up
+    if (navigator.onLine && !sessionStorage.getItem('fm.reloadedForChunk')) {
+      sessionStorage.setItem('fm.reloadedForChunk', '1');
+      location.reload();
+    }
+    throw new PdfError('invalid', 'Could not load the PDF reader. Check your connection and try again.');
+  }
+  sessionStorage.removeItem('fm.reloadedForChunk');
   pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
 
   const data = new Uint8Array(await file.arrayBuffer());

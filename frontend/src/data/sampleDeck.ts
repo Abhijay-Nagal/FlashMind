@@ -2,6 +2,7 @@ import type { RawTopic } from '../../api/generate';
 import type { Deck } from '../types/deck';
 import { toTopic } from '../lib/deckBuild';
 import { uid } from '../lib/util';
+import { actions, getState } from '../lib/store';
 
 /**
  * A real deck produced by the FlashMind pipeline from a 7-page lecture-notes PDF
@@ -472,4 +473,14 @@ export function createSampleDeck(): Deck {
     isSample: true,
     topics: TOPICS.map((t, i) => toTopic(t, i)),
   };
+}
+
+/** Adds the sample deck once; repeated taps reuse the existing one. */
+export function ensureSampleDeck(): string {
+  const existing = getState().decks.find((d) => d.isSample);
+  if (existing) return existing.id;
+  const d = createSampleDeck();
+  actions.upsertDeck(d);
+  actions.setFlag({ sampleAdded: true });
+  return d.id;
 }
