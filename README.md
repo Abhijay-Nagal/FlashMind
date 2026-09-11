@@ -6,6 +6,13 @@ FlashMind is a mobile-first Progressive Web App. Upload your study material, and
 *in order*, splits it into topics and writes a chain of cards for each topic. The cards are generated
 only from your document (every card shows the PDF page it came from), not from a random feed.
 
+<p align="center">
+  <img src="docs/screenshots/home.png" width="200" alt="Home screen with Flashy the mascot" />
+  <img src="docs/screenshots/study.png" width="200" alt="A flashcard generated from a PDF" />
+  <img src="docs/screenshots/quiz.png" width="200" alt="The MCQ on the back of a card" />
+  <img src="docs/screenshots/map.png" width="200" alt="Deck map: topics × depth" />
+</p>
+
 ## How studying works
 
 | Gesture | What happens |
@@ -14,6 +21,7 @@ only from your document (every card shows the PDF page it came from), not from a
 | **Swipe left** | Go deeper into the *current* topic (details, examples, formulas, pitfalls…) |
 | **Swipe right / up** | Back a level / previous topic |
 | **Press & hold** | Flip the card and answer its multiple-choice question |
+| **Tap the page tag** | See the exact passage of the PDF the card was written from |
 
 The "next topic" direction can be switched to *swipe up* in Settings. Buttons below the card and the
 arrow keys do the same thing for accessibility and desktop use.
@@ -29,7 +37,10 @@ arrow keys do the same thing for accessibility and desktop use.
 ## Features
 
 - **PDF → deck**: text extracted on the device (pdf.js); ~30 cards for a 100-page PDF, adjustable
-  (Light / Balanced / Deep). Scanned/password-protected PDFs are detected with a friendly message.
+  (Light / Balanced / Deep). Reference lists are skipped; scanned/password-protected PDFs are
+  detected with a friendly message.
+- **Grounded in your document**: every card carries its PDF page and the source passage it was
+  written from (tap the page tag to see it highlighted).
 - **Live generation screen**: cards drop onto the pile as each section is written; start studying
   after the first section while the rest is generated.
 - **Flashy the mascot**: blinks, waves, laughs at correct answers, looks sad at wrong ones, sleeps

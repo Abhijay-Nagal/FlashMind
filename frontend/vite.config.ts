@@ -57,9 +57,14 @@ export default defineConfig(({ mode }) => {
             { src: '/pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
             { src: '/pwa-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
           ],
+          screenshots: [
+            { src: '/screenshots/study.png', sizes: '780x1688', type: 'image/png', form_factor: 'narrow', label: 'Swipe through topics in PDF order' },
+            { src: '/screenshots/home.png', sizes: '780x1688', type: 'image/png', form_factor: 'narrow', label: 'Your decks, streak and daily goal' },
+          ],
         },
         workbox: {
           globPatterns: ['**/*.{js,mjs,css,html,svg,png,woff2}'],
+          globIgnores: ['screenshots/**'],
           // the pdf.js worker is ~1 MB; cache it so PDFs can be read offline
           maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
           navigateFallbackDenylist: [/^\/api\//],
