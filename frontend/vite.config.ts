@@ -1,36 +1,77 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig, loadEnv, type Plugin } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig({
-  plugins: [
-    react(),
-    VitePWA({
-      registerType: 'autoUpdate',
+/**
+ * Serves `api/generate.ts` during `npm run dev`, exactly as Vercel does in
+ * production, so the full PDF → flashcards flow works locally.
+ * Put GROQ_API_KEY=... in frontend/.env.local to use it.
+ */
+function devApi(env: Record<string, string>): Plugin {
+  return {
+    name: 'flashmind-dev-api',
+    apply: 'serve',
+    configureServer(server) {
+      for (const k of ['GROQ_API_KEY', 'LLM_API_KEY', 'LLM_BASE_URL', 'LLM_MODELS']) {
+        if (env[k] && !process.env[k]) process.env[k] = env[k];
+      }
+      server.middlewares.use(async (req, res, next) => {
+        // exact match only: Vite itself serves the module at /api/generate.ts
+        if (req.url?.split('?')[0] !== '/api/generate') return next();
+        try {
+          const mod = await server.ssrLoadModule('/api/generate.ts');
+          await mod.default(req, res);
+        } catch (e) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'provider_error', message: (e as Error).message }));
+        }
+      });
+    },
+  };
+}
 
-      manifest: {
-        name: 'FlashMind',
-        short_name: 'FlashMind',
-        description: 'Learn. Swipe. Repeat.',
-        theme_color: '#aa3bff',
-        background_color: '#ffffff',
-        display: 'standalone',
-        start_url: '/',
-        icons: [
-          {
-            src: '/pwa-icon-192.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'any'
-          },
-          {
-            src: '/pwa-icon-maskable.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'maskable'
-          }
-        ]
-      },
-    }),
-  ],
-})
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  return {
+    plugins: [
+      react(),
+      devApi(env),
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+        manifest: {
+          id: '/',
+          name: 'FlashMind — PDF to Flashcards',
+          short_name: 'FlashMind',
+          description: 'Turn any PDF into connected, swipeable flashcards with quizzes.',
+          theme_color: '#0c0a1b',
+          background_color: '#0c0a1b',
+          display: 'standalone',
+          orientation: 'portrait',
+          start_url: '/',
+          scope: '/',
+          categories: ['education', 'productivity'],
+          icons: [
+            { src: '/pwa-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+            { src: '/pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+            { src: '/pwa-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          ],
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,mjs,css,html,svg,png,woff2}'],
+          // the pdf.js worker is ~1 MB; cache it so PDFs can be read offline
+          maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+          navigateFallbackDenylist: [/^\/api\//],
+          cleanupOutdatedCaches: true,
+        },
+      }),
+    ],
+    build: {
+      chunkSizeWarningLimit: 1600,
+    },
+    server: {
+      host: true,
+    },
+  };
+});

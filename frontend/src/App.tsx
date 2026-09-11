@@ -1,154 +1,150 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Flashcard } from './components/flashcard/Flashcard';
-import { BottomNav } from './components/navigation/BottomNav';
+import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { SplashScreen } from './components/common/SplashScreen';
-import { AnimatedBackground } from './components/common/AnimatedBackground';
-import { Logo } from './components/common/Logo';
-import { SettingsModal } from './components/settings/SettingsModal';
-import { UploadView } from './components/upload/UploadView';
-import type { Theme } from './components/settings/SettingsModal';
-import type { Flashcard as FlashcardType } from './types/flashcard';
-import { flashcards as defaultFlashcards, flashcardChains as defaultChains } from './data/flashcards';
+import { TabBar, type Tab } from './components/common/TabBar';
+import { Toasts } from './components/common/Toasts';
+import { SettingsSheet } from './components/settings/SettingsSheet';
+import { HomeScreen } from './screens/HomeScreen';
+import { CreateScreen } from './screens/CreateScreen';
+import { StatsScreen } from './screens/StatsScreen';
+import { StudyScreen } from './screens/StudyScreen';
+import { QuizScreen } from './screens/QuizScreen';
+import { GeneratingScreen } from './screens/GeneratingScreen';
+import { actions, useStore } from './lib/store';
+import { dismissJob, getGenJob } from './lib/generator';
+import { useBackHandler } from './lib/backHandler';
+import { createSampleDeck } from './data/sampleDeck';
 
-function App() {
-  const [showSplash, setShowSplash] = useState(true);
-  
-  // Navigation State
-  const [activeTab, setActiveTab] = useState<'home' | 'upload'>('home');
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  
-  // Flashcard Data State
-  const [activeCards, setActiveCards] = useState<FlashcardType[]>(defaultFlashcards);
-  const [activeChains, setActiveChains] = useState<string[][]>(defaultChains);
-  
-  // Swipe State
-  const [vIndex, setVIndex] = useState(0);
-  const [hIndex, setHIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  
-  // Theme logic
-  const [theme, setTheme] = useState<Theme>('system');
-  
+type QuizMode = 'mix' | 'mistakes' | 'starred';
+type Route = { name: 'tabs' } | { name: 'study'; deckId: string } | { name: 'quiz'; deckId: string; mode: QuizMode };
+
+function useTheme() {
+  const theme = useStore((s) => s.settings.theme);
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(theme);
-    }
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = () => {
+      const dark = theme === 'dark' || (theme === 'system' && mq.matches);
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0c0a1b' : '#f4f1ff');
+    };
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
   }, [theme]);
+}
 
-  // Derived state for current card
-  const currentChain = activeChains[vIndex] || [];
-  const currentCardId = currentChain[hIndex];
-  const currentCard = activeCards.find(c => c.id === currentCardId) || activeCards[0];
+export default function App() {
+  const [splash, setSplash] = useState(() => !new URLSearchParams(location.search).has('nosplash'));
+  const [tab, setTab] = useState<Tab>('home');
+  const [route, setRoute] = useState<Route>({ name: 'tabs' });
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [genOpen, setGenOpen] = useState(false);
 
-  const canSwipeLeft = hIndex < currentChain.length - 1;
-  const canSwipeRight = hIndex > 0;
-  const canSwipeUp = vIndex < activeChains.length - 1;
-  const canSwipeDown = vIndex > 0;
+  useTheme();
+  useBackHandler(route.name === 'tabs' && tab !== 'home', () => setTab('home'));
 
-  const handleSwipeLeft = () => { setHIndex(h => h + 1); setIsFlipped(false); };
-  const handleSwipeRight = () => { setHIndex(h => h - 1); setIsFlipped(false); };
-  const handleSwipeUp = () => { setVIndex(v => v + 1); setHIndex(0); setIsFlipped(false); };
-  const handleSwipeDown = () => { setVIndex(v => v - 1); setHIndex(0); setIsFlipped(false); };
+  const endSplash = useCallback(() => setSplash(false), []);
 
-  const resetFeed = () => {
-    setActiveTab('home');
-    setVIndex(0);
-    setHIndex(0);
-    setIsFlipped(false);
-  };
-  
-  const handleFlashcardsGenerated = (generatedCards: FlashcardType[]) => {
-    setActiveCards(generatedCards);
-    // Create a flat chain for the generated cards
-    setActiveChains([generatedCards.map(c => c.id)]);
-    resetFeed(); // This will also switch back to the 'home' tab to view them
-  };
+  const openDeck = useCallback((deckId: string) => {
+    setGenOpen(false);
+    if (getGenJob()?.phase === 'done' && getGenJob()?.deckId === deckId) dismissJob();
+    setRoute({ name: 'study', deckId });
+  }, []);
+
+  const openSample = useCallback(() => {
+    dismissJob();
+    const d = createSampleDeck();
+    actions.upsertDeck(d);
+    openDeck(d.id);
+  }, [openDeck]);
 
   return (
-    <div className="app-container">
-      <AnimatedBackground />
-      <AnimatePresence>
-        {showSplash && (
-          <SplashScreen key="splash" onComplete={() => setShowSplash(false)} />
-        )}
-      </AnimatePresence>
-      
-      {!showSplash && (
-        <>
-          <header className="app-header" style={{ position: 'relative', zIndex: 10 }}>
-            <Logo animated={false} className="header-logo" />
-          </header>
-          
-          <AnimatePresence mode="wait">
-        {activeTab === 'home' && (
-          <motion.div 
-            key="home"
-            className="feed-container"
-            initial={{ opacity: 0, y: 10 }}
+    <div className="app">
+      <div className="backdrop">
+        <span />
+      </div>
+
+      <main className="screen">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={tab}
+            className="screen"
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
           >
-            {currentCard && (
-              <Flashcard
-                key={currentCard.id}
-                card={currentCard}
-                currentIndex={hIndex}
-                totalCards={currentChain.length}
-                onSwipeLeft={handleSwipeLeft}
-                onSwipeRight={handleSwipeRight}
-                onSwipeUp={handleSwipeUp}
-                onSwipeDown={handleSwipeDown}
-                canSwipeLeft={canSwipeLeft}
-                canSwipeRight={canSwipeRight}
-                canSwipeUp={canSwipeUp}
-                canSwipeDown={canSwipeDown}
-                isFlipped={isFlipped}
-                setIsFlipped={setIsFlipped}
+            {tab === 'home' && (
+              <HomeScreen
+                onOpenDeck={openDeck}
+                onCreate={() => setTab('create')}
+                onSettings={() => setSettingsOpen(true)}
+                onShowGeneration={() => setGenOpen(true)}
+                onQuiz={(deckId, mode) => setRoute({ name: 'quiz', deckId, mode })}
               />
             )}
+            {tab === 'create' && (
+              <CreateScreen
+                onStarted={() => {
+                  setTab('home');
+                  setGenOpen(true);
+                }}
+                onSettings={() => setSettingsOpen(true)}
+              />
+            )}
+            {tab === 'stats' && <StatsScreen onSettings={() => setSettingsOpen(true)} />}
+          </motion.div>
+        </AnimatePresence>
+      </main>
+
+      <TabBar active={tab} onChange={setTab} />
+
+      <AnimatePresence>
+        {route.name === 'study' && (
+          <motion.div
+            key={`study-${route.deckId}`}
+            className="layer"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
+            <StudyScreen
+              deckId={route.deckId}
+              onExit={() => setRoute({ name: 'tabs' })}
+              onQuiz={(mode) => setRoute({ name: 'quiz', deckId: route.deckId, mode })}
+            />
           </motion.div>
         )}
-
-        {activeTab === 'upload' && (
-          <motion.div 
-            key="upload" 
-            style={{ flex: 1, display: 'flex', width: '100%', overflowY: 'auto' }}
-            initial={{ opacity: 0, y: 10 }}
+        {route.name === 'quiz' && (
+          <motion.div
+            key={`quiz-${route.deckId}-${route.mode}`}
+            className="layer"
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
           >
-            <UploadView onFlashcardsGenerated={handleFlashcardsGenerated} />
+            <QuizScreen deckId={route.deckId} mode={route.mode} onExit={() => setRoute({ name: 'tabs' })} />
           </motion.div>
         )}
       </AnimatePresence>
 
-      <BottomNav 
-        onHomeClick={resetFeed} 
-        onUploadClick={() => setActiveTab('upload')}
-        onSettingsClick={() => setIsSettingsOpen(true)}
-        activeTab={isSettingsOpen ? 'settings' : activeTab}
+      <GeneratingScreen
+        open={genOpen}
+        onMinimize={() => setGenOpen(false)}
+        onStudy={openDeck}
+        onSettings={() => {
+          setGenOpen(false);
+          setSettingsOpen(true);
+        }}
+        onSample={openSample}
       />
-      
-      {isSettingsOpen && (
-        <SettingsModal 
-          onClose={() => setIsSettingsOpen(false)} 
-          theme={theme}
-          setTheme={setTheme}
-        />
-      )}
-        </>
-      )}
+
+      <SettingsSheet open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <Toasts />
+
+      <AnimatePresence>{splash && <SplashScreen key="splash" onDone={endSplash} />}</AnimatePresence>
     </div>
   );
 }
-
-export default App;
