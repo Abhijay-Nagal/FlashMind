@@ -11,6 +11,7 @@ import {
   Loader2,
   MoreHorizontal,
   Play,
+  Quote,
   RotateCcw,
   Settings as SettingsIcon,
   Sparkles,
@@ -264,6 +265,15 @@ export function HomeScreen({ onOpenDeck, onCreate, onSettings, onShowGeneration,
             <div>
               <strong>Press & hold</strong>
               <span>Flip the card and answer its quiz</span>
+            </div>
+          </div>
+          <div className="how-item">
+            <span className="how-ic" style={{ background: 'rgba(255,95,162,.14)', color: 'var(--pink)' }}>
+              <Quote size={18} fill="currentColor" />
+            </span>
+            <div>
+              <strong>Tap the page tag</strong>
+              <span>See the exact passage of your PDF behind a card</span>
             </div>
           </div>
         </div>

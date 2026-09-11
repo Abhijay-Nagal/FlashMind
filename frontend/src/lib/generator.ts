@@ -128,7 +128,8 @@ export async function startGeneration(src: PdfSource, density: Density): Promise
             if (r.emoji) deck.emoji = r.emoji;
           }
           const start = deck.topics.length;
-          const topics = r.topics.map((t, i) => toTopic(t, start + i));
+          const sec = plan.sections[appended];
+          const topics = r.topics.map((t, i) => toTopic(t, start + i, { pages: src.pages, range: [sec.pageStart, sec.pageEnd] }));
           deck = { ...deck, topics: [...deck.topics, ...topics] };
           actions.upsertDeck(deck);
           emit({

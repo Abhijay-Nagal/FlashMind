@@ -8,6 +8,7 @@ import { TopicMap } from '../components/study/TopicMap';
 import { GestureTutorial } from '../components/study/GestureTutorial';
 import { DeckComplete } from '../components/study/DeckComplete';
 import { Reaction, type ReactionState } from '../components/study/Reaction';
+import { SourceSheet } from '../components/study/SourceSheet';
 import { actions, getState, useStore } from '../lib/store';
 import { haptic, sfx } from '../lib/feedback';
 import { burst } from '../lib/confetti';
@@ -41,6 +42,7 @@ export function StudyScreen({ deckId, onExit, onQuiz }: Props) {
   });
   const [flipped, setFlipped] = useState(false);
   const [mapOpen, setMapOpen] = useState(false);
+  const [sourceOpen, setSourceOpen] = useState(false);
   const [complete, setComplete] = useState(false);
   const [dragDir, setDragDir] = useState<Dir | null>(null);
   const [holdPulse, setHoldPulse] = useState(0);
@@ -206,7 +208,7 @@ export function StudyScreen({ deckId, onExit, onQuiz }: Props) {
   // keyboard support (desktop / accessibility)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (mapOpen || complete || !tutorialDone) return;
+      if (mapOpen || sourceOpen || complete || !tutorialDone) return;
       if ((e.target as HTMLElement)?.closest('input, textarea')) return;
       if (e.key === 'ArrowLeft') void fly('left');
       else if (e.key === 'ArrowRight') void fly('right');
@@ -220,7 +222,7 @@ export function StudyScreen({ deckId, onExit, onQuiz }: Props) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [fly, flip, nextDir, prevDir, mapOpen, complete, tutorialDone]);
+  }, [fly, flip, nextDir, prevDir, mapOpen, sourceOpen, complete, tutorialDone]);
 
   // live drag hint
   const hintOpacity = useTransform([x, y], ([vx, vy]: number[]) => Math.min(1, Math.max(Math.abs(vx), Math.abs(vy)) / 90));
@@ -357,6 +359,7 @@ export function StudyScreen({ deckId, onExit, onQuiz }: Props) {
                 hasDeeper={can.deeper}
                 nextLabel={pos.topic < topics.length - 1 ? `swipe ${nextDir} · next topic` : generating ? 'more topics coming' : `swipe ${nextDir} to finish`}
                 holdPulse={holdPulse}
+                onSource={() => setSourceOpen(true)}
               />
             }
             back={<CardBack card={card} topic={topic} storedPick={cp?.picked} onAnswer={onAnswer} />}
@@ -392,6 +395,8 @@ export function StudyScreen({ deckId, onExit, onQuiz }: Props) {
       </nav>
 
       <Reaction state={reaction} onDone={() => setReaction(null)} />
+
+      <SourceSheet open={sourceOpen} onClose={() => setSourceOpen(false)} card={card} fileName={deck.sourceName} />
 
       <TopicMap
         open={mapOpen}

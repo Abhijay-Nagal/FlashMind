@@ -10,6 +10,7 @@ import {
   Hand,
   Lightbulb,
   Puzzle,
+  Quote,
   RotateCcw,
   Scale,
   Sigma,
@@ -57,9 +58,10 @@ interface FrontProps {
   hasDeeper: boolean;
   nextLabel: string;
   holdPulse: number;
+  onSource: () => void;
 }
 
-export function CardFront({ card, topic, depth, hasDeeper, nextLabel, holdPulse }: FrontProps) {
+export function CardFront({ card, topic, depth, hasDeeper, nextLabel, holdPulse, onSource }: FrontProps) {
   const fitRef = useFit(card.id);
   const meta = KIND_META[card.kind] ?? KIND_META.detail;
   return (
@@ -75,7 +77,11 @@ export function CardFront({ card, topic, depth, hasDeeper, nextLabel, holdPulse 
           <span aria-hidden="true">{topic.emoji}</span>
           <span className="topic-chip-text">{topic.title}</span>
         </span>
-        {card.page ? (
+        {card.source ? (
+          <button className="page-chip tappable" onClick={onSource} aria-label={`Show the passage from page ${card.page ?? ''} of your PDF`}>
+            <Quote size={11} fill="currentColor" /> p.{card.page ?? '?'}
+          </button>
+        ) : card.page ? (
           <span className="page-chip" title="Page in your PDF">
             <FileText size={12} /> p.{card.page}
           </span>

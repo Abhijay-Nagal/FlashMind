@@ -268,7 +268,7 @@
   text-align: left;
   color: var(--primary-ink);
   background: var(--primary-soft);
-  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  border: 1px solid var(--primary-line);
 }
 
 .gen-pill span {
@@ -625,7 +625,7 @@
   gap: 6px;
   padding: 26px 18px 24px;
   border-radius: var(--radius-lg);
-  border: 2px dashed color-mix(in srgb, var(--primary) 45%, transparent);
+  border: 2px dashed var(--primary-line);
   background: linear-gradient(180deg, var(--surface), var(--surface-2));
   text-align: center;
 }
@@ -642,7 +642,7 @@
 }
 
 .dropzone.error {
-  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+  border-color: var(--danger);
 }
 
 .drop-error {
@@ -1318,7 +1318,7 @@
   position: absolute;
   left: -3px;
   right: -3px;
-  border-top: 2px dashed color-mix(in srgb, var(--accent) 70%, transparent);
+  border-top: 2px dashed rgba(255, 176, 32, 0.7);
 }
 
 .week-bar {
@@ -1367,7 +1367,7 @@
 .badge.got {
   opacity: 1;
   filter: none;
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  border-color: rgba(255, 176, 32, 0.4);
   background: linear-gradient(160deg, var(--surface), var(--accent-soft));
 }
 

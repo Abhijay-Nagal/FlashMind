@@ -29,6 +29,8 @@ export interface Card {
   title: string;
   body: string;
   page: number | null; // page in the source PDF
+  /** the passage of the PDF this card was written from */
+  source?: string;
   quiz: Quiz;
 }
 
