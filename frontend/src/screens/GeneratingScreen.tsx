@@ -155,15 +155,15 @@ export function GeneratingScreen({ open, onMinimize, onStudy, onSettings, onSamp
           <div className="gen-stage">
             <div className="forge">
               <AnimatePresence>
-                {job.preview.length === 0 && writing && (
-                  <>
-                    {[0, 2, 1].map((i) => (
+                {job.preview.length === 0 &&
+                  writing &&
+                  [0, 2, 1].map((i) => (
                       <motion.div
                         key={`ghost-${i}`}
                         className={`forge-card ghost g${i}`}
                         initial={{ opacity: 0, y: 40, rotate: 0 }}
                         animate={{ opacity: 1, y: i === 1 ? [0, -8, 0] : 0, rotate: (i - 1) * 11, x: (i - 1) * 38 }}
-                        exit={{ opacity: 0, scale: 0.85 }}
+                        exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.25 } }}
                         transition={{
                           default: { delay: i * 0.08, type: 'spring', stiffness: 200, damping: 18 },
                           y: i === 1 ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' } : undefined,
@@ -185,9 +185,7 @@ export function GeneratingScreen({ open, onMinimize, onStudy, onSettings, onSamp
                           </>
                         )}
                       </motion.div>
-                    ))}
-                  </>
-                )}
+                  ))}
               </AnimatePresence>
               {job.preview.slice(-6).map((t, i, arr) => {
                 const fromTop = arr.length - 1 - i;
