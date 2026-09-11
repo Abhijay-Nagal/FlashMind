@@ -1,7 +1,6 @@
 fastapi
 uvicorn[standard]
 pydantic-settings
+httpx
+# optional
 supabase
-python-multipart
-pdfplumber
-groq
