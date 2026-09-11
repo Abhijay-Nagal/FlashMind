@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { ArrowDown, ArrowLeft, Check, FileText, X } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUp, Check, FileText, X } from 'lucide-react';
 import { Sheet } from '../common/Sheet';
 import type { Deck, DeckProgress } from '../../types/deck';
 import { topicGradient } from '../../lib/palette';
-import { deckStats } from '../../lib/store';
+import { deckStats, useStore } from '../../lib/store';
 
 interface Props {
   open: boolean;
@@ -17,6 +17,7 @@ interface Props {
 /** The deck as a map: topics run top→bottom (PDF order), each topic's chain runs left→right. */
 export function TopicMap({ open, onClose, deck, progress, current, onJump }: Props) {
   const st = deckStats(deck, progress);
+  const nextSwipe = useStore((s) => s.settings.nextTopicSwipe);
   const listRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export function TopicMap({ open, onClose, deck, progress, current, onJump }: Pro
     >
       <div className="map-legend">
         <span>
-          <ArrowDown size={14} /> topics in PDF order
+          {nextSwipe === 'up' ? <ArrowUp size={14} /> : <ArrowDown size={14} />} swipe for next topic
         </span>
         <span>
           <ArrowLeft size={14} /> go deeper

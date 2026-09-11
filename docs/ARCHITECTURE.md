@@ -33,7 +33,7 @@ Topic  { title, emoji, hue, cards: Card[] }      // cards[0] is the "core" card
 Card   { kind, title, body, page, quiz: { question, options[4], answer, explanation } }
 ```
 
-`topics` is the vertical axis (swipe down/up), `topic.cards` is the horizontal axis (swipe left/right).
+`topics` is the vertical axis (swipe up for the next topic, down to go back), `topic.cards` is the horizontal axis (swipe left/right).
 Quiz options are shuffled client-side because LLMs tend to put the right answer first.
 
 ## 3. Generation contract (`POST /api/generate`)

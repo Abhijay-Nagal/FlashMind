@@ -17,18 +17,18 @@ only from your document (every card shows the PDF page it came from), not from a
 
 | Gesture | What happens |
 | --- | --- |
-| **Swipe down** | Next topic — in the order it appears in your PDF |
+| **Swipe up** | Next topic — in the order it appears in your PDF |
 | **Swipe left** | Go deeper into the *current* topic (details, examples, formulas, pitfalls…) |
-| **Swipe right / up** | Back a level / previous topic |
+| **Swipe right / down** | Back a level / previous topic |
 | **Press & hold** | Flip the card and answer its multiple-choice question |
 | **Tap the page tag** | See the exact passage of the PDF the card was written from |
 
-The "next topic" direction can be switched to *swipe up* in Settings. Buttons below the card and the
+The "next topic" direction can be switched to *swipe down* in Settings. Buttons below the card and the
 arrow keys do the same thing for accessibility and desktop use.
 
 ```
  Topic 1 ──►  core ─ swipe left ─► deeper ─► deeper
-    │ swipe down
+    │ swipe up
  Topic 2 ──►  core ─► deeper ─► example
     │
  Topic 3 ──►  core ─► formula ─► misconception ─► application

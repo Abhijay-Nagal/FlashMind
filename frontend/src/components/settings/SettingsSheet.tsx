@@ -73,11 +73,11 @@ export function SettingsSheet({ open, onClose }: Props) {
         <section>
           <h3 className="eyebrow">Next-topic gesture</h3>
           <div className="segmented">
-            <button className={settings.nextTopicSwipe === 'down' ? 'active' : ''} onClick={() => actions.setSettings({ nextTopicSwipe: 'down' })}>
-              <ArrowDown size={16} /> Swipe down
-            </button>
             <button className={settings.nextTopicSwipe === 'up' ? 'active' : ''} onClick={() => actions.setSettings({ nextTopicSwipe: 'up' })}>
               <ArrowUp size={16} /> Swipe up
+            </button>
+            <button className={settings.nextTopicSwipe === 'down' ? 'active' : ''} onClick={() => actions.setSettings({ nextTopicSwipe: 'down' })}>
+              <ArrowDown size={16} /> Swipe down
             </button>
           </div>
           <p className="setting-help">Swipe left always goes deeper into the current topic.</p>
@@ -173,7 +173,7 @@ export function SettingsSheet({ open, onClose }: Props) {
         <p className="about">
           FlashMind · cards are generated only from the PDFs you upload.
           <br />
-          Made with 💜 for curious minds.
+          Made with 💚 for curious minds.
         </p>
       </div>
     </Sheet>

@@ -39,6 +39,8 @@ export interface Stats {
 export interface Flags {
   gestureTutorial: boolean;
   sampleAdded: boolean;
+  /** one-time switch of the default "next topic" gesture from swipe down to swipe up */
+  swipeUpDefault?: boolean;
 }
 
 interface State {
@@ -106,7 +108,7 @@ const defaultSettings: Settings = {
   theme: 'system',
   sound: true,
   haptics: true,
-  nextTopicSwipe: 'down',
+  nextTopicSwipe: 'up',
   apiKey: '',
   dailyGoal: 20,
   name: '',
@@ -119,6 +121,14 @@ let state: State = {
   settings: load<Settings>(KEYS.settings, defaultSettings),
   flags: load<Flags>(KEYS.flags, { gestureTutorial: false, sampleAdded: false }),
 };
+
+// Next topic used to be "swipe down"; it's now "swipe up" for everyone.
+if (!state.flags.swipeUpDefault) {
+  state.settings = { ...state.settings, nextTopicSwipe: 'up' };
+  state.flags = { ...state.flags, swipeUpDefault: true };
+  save(KEYS.settings, state.settings);
+  save(KEYS.flags, state.flags);
+}
 
 // A deck that was mid-generation when the app closed can't resume.
 state.decks = state.decks.filter((d) => !(d.generating && d.topics.length === 0)).map((d) => (d.generating ? { ...d, generating: false } : d));
@@ -335,7 +345,7 @@ export const actions = {
       decks: [],
       progress: {},
       stats: { ...defaultStats, today: { day: dayKey(), cards: 0, answered: 0 }, history: {} },
-      flags: { gestureTutorial: false, sampleAdded: false },
+      flags: { gestureTutorial: false, sampleAdded: false, swipeUpDefault: true },
     });
   },
 };
